@@ -29,4 +29,4 @@ Messages will be queued by rabbitmq and sent one by one. You can launch many
 instances of this micro-service to increase delivery throughput
 (if you really need to..)
 
-See `client.coffee` for a code example.
+See `client_example.coffee` for a code example.

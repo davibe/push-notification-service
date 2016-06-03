@@ -19,9 +19,10 @@ if not module.parent then genrun ->
     message = process.argv[4]
 
     note =
-      alert: message
       tokens: [token] if token
       type: type
+      notification:
+        alert: message
 
     console.log 'Sending notification', note
 

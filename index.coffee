@@ -2,6 +2,8 @@ amqp = require 'amqp-as-promised'
 genrun = require 'q-genrun'
 assert = require 'assert'
 
+gcm = require './gcm'
+apn = require './apn'
 
 conf =
   connection:
@@ -11,25 +13,29 @@ conf =
 amqpc = amqp(conf)
 
 
-validate = (note) ->
+serviceForType = (type) -> if type is 'gcm' then gcm else apn
+
+
+validate = (msg) ->
   assert(
-    note.tokens,
+    msg.tokens,
     'Notification has no destinations (tokens)'
   )
   assert(
-    note.badge or note.message or note.alert,
+    msg.notification.badge or msg.notification.message or msg.notification.alert,
     'Notification is empty (no alert, message, badge)'
   )
   assert(
-    note.type in ['apn', 'gcm'],
-    "Notification type unknown (#{note.type} is not [apn|gcn])"
+    msg.type in ['apn', 'gcm'],
+    "Notification type unknown (#{msg.type} is not [apn|gcn])"
   )
 
 
 serve = (msg, headers, del) -> genrun ->
   try
     validate(msg)
-    yield console.log 'PushNotification Service should now serve message', msg
+    service = serviceForType(msg.type)
+    yield service.send(msg.notification, msg.tokens)
 
   catch error # log and re-throw the error back to the amqp producer
     console.log 'PushNotification service error', error
