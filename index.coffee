@@ -27,7 +27,7 @@ validate = (msg) ->
   )
   assert(
     msg.type in ['apn', 'gcm'],
-    "Notification type unknown (#{msg.type} is not [apn|gcn])"
+    "Notification type unknown (#{msg.type} is not [apn|gcm])"
   )
 
 

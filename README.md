@@ -12,6 +12,7 @@ Run the service using docker
 		docker run -it --rm=true \
 			-v push-notification-service-data:/data \
 			-e CERTS_PATH=/data \
+			-e RABBITMQ_URL="amqp://localhost:5672//?heartbeat=10" \
 			-e GOOGLE_API_KEY="your-google-gcm-api-key" \
 			-e NODE_ENV=development
 
