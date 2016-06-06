@@ -6,7 +6,6 @@ genrun = require 'q-genrun'
 GOOGLE_API_KEY = "" or process.env.GOOGLE_API_KEY
 delete process.env.GOOGLE_API_KEY # nobody needs to know
 
-console.log GOOGLE_API_KEY
 sender = new gcm.Sender(GOOGLE_API_KEY);
 sender.send = Q.denodeify(sender.send.bind(sender))
 

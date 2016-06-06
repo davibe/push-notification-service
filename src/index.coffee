@@ -39,6 +39,7 @@ serve = (msg, headers, del) -> genrun ->
 
   catch error # log and re-throw the error back to the amqp producer
     console.log 'PushNotification service error', error
+    console.log error.stack.split('\n') if error.stack
     throw error
 
   { result: 'ok' }

@@ -19,7 +19,7 @@ if not module.parent then genrun ->
     message = process.argv[4]
 
     note =
-      tokens: [token] if token
+      tokens: if token then [token] else []
       type: type
       notification:
         alert: message
