@@ -54,6 +54,9 @@ if not module.parent
       console.log 'PushNotification service shutting down'
       amqpc.shutdown().then ->
           process.exit 0
+      setTimeout -> # if not connected amqpc hangs.shutdown indefinitely, so..
+          process.exit 0
+      , 2000
 
   process.on 'SIGINT', gracefulShutdown
   process.on 'SIGTERM', gracefulShutdown
