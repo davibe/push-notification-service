@@ -1,0 +1,21 @@
+elasticsearch:
+  image: elasticsearch
+
+rabbitmq:
+  image: rabbitmq:3-management
+  hostname: rabbitmq
+  ports: [5672]
+  environment:
+    - RABBITMQ_ERLANG_COOKIE=some_secret_cookie
+    - RABBITMQ_NODENAME=rabbitmq
+
+test:
+  build: .
+  links: ["rabbitmq", "elasticsearch"]
+  environment:
+    - ELASTICSEARCH_URL=http://elasticsearch:9200
+    - RABBITMQ_URL=amqp://rabbitmq:5672//?heartbeat=10
+    - GOOGLE_API_KEY=some-api-key
+    - CERTS_PATH=./push-notification-service-data
+    - NODE_ENV=development
+  command: npm run test

@@ -15,10 +15,21 @@ Run the service using docker
       -e RABBITMQ_URL="amqp://localhost:5672//?heartbeat=10" \
       -e GOOGLE_API_KEY="your-google-gcm-api-key" \
       -e NODE_ENV=development \
-      push-notification-service coffee src/index.coffee
+      push-notification-service coffee src/service.coffee
 
 Look at `push-notification-service-data/` to understand how to place your
-certificates.
+certificates. I mount a separate container volume to keep them private.
+
+
+Run tests
+---------
+
+Continuous integration style
+
+    docker-compose build
+    docker-compose run test
+    docker-compose stop -t1
+    docker-compose rm -f
 
 
 Using the service

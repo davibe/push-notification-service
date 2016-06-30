@@ -4,15 +4,19 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --compilers coffee:coffee-script/register --bail"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "amqp-as-promised": "^1.2.3",
     "apn": "^1.7.5",
+    "elasticsearch": "^11.0.1",
+    "mocha": "^2.5.3",
     "node-gcm": "^0.14.2",
+    "q-extended": "^1.0.3",
     "q-genrun": "^1.0.1",
+    "require-dir": "^0.3.0",
     "retry": "^0.9.0"
   }
 }
