@@ -59,11 +59,15 @@ module.exports.send = send = (notification={}, tokens=[]) ->
   note.alert = notification.alert or notification.message or ""
   # additional application-specific payload
   note.payload = notification.payload || {}
+
+  if process.env.TEST_MODE in ["1", "true"]
+    return console.log "Would send APN push notification", note, tokens
+
   service.pushNotification(note, tokens)
 
 
 # TODO: setup feedback service
-# Do we actually need feedback service if we already have 'transiossionError' event ?
+# Do we actually need feedback service if we already have 'transmissionError' event ?
 
 # cli test usage
 if not module.parent
