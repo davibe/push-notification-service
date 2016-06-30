@@ -38,8 +38,8 @@ Using the service
 In your backend or application instances you can send messages to rabbitmq using
 the great [amqp-as-promised](https://github.com/ttab/amqp-as-promised) RPC package
 
-Messages will be queued by rabbitmq and sent one by one. You can launch many
-instances of this micro-service to increase delivery throughput
-(if you really need to..)
+The RPC interface includes both functions to store and retrieve deviceTokens
+Look at `src/client_example.coffee` and `test/service.coffee` to better understand how it works
 
-See `client_example.coffee` for a code example.
+Calls will be queued by rabbitmq and executed by any of the available service instances.
+You can launch many instances of this micro-service to increase capacity.
