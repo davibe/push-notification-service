@@ -12,14 +12,9 @@ sample =
     type: 'apn'
     value: 'SAMPLE_TOKEN'
 
+# export tests so we can re-use them in service test
 
-describe 'db should work allright', ->
-
-  before ->
-    this.timeout(60 * 1000 * 2)
-    Q.genrun ->
-      yield esclient.waitES()
-      yield esclient.indexTemplatesInit()
+module.exports.test = test = (db) ->
 
   afterEach -> Q.genrun ->
     try
@@ -65,3 +60,14 @@ describe 'db should work allright', ->
     yield db.createOrUpdate(sample)
     yield db.deleteById(sample.token.value)
     assert(yield db.createOrUpdate(sample), null, 'Removed token should not be found')
+
+
+describe 'db should work allright', ->
+
+  before ->
+    this.timeout(60 * 1000 * 2)
+    Q.genrun ->
+      yield esclient.waitES()
+      yield esclient.indexTemplatesInit()
+
+  test(db)
