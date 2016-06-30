@@ -2,20 +2,10 @@ assert = require 'assert'
 Q = require 'q-extended'
 amqp = require 'amqp-as-promised'
 
-esclient = require '../src/db/esclient'
-db = require '../src/db'
 service = require '../src/service'
 dbTest = require('./db').test
 
-sample =
-  user:
-    id: 'sample_id'
-    username: 'sample_username'
-  token:
-    type: 'apn'
-    value: 'SAMPLE_TOKEN'
-
-describe 'amqp interface should work as well', ->
+describe 'amqp db interface should work as well', ->
   # prepare amqp client
   conf =
     connection:
