@@ -1,7 +1,6 @@
 elasticsearch = require 'elasticsearch'
 URL = require 'url'
 Q = require 'q-extended'
-requireDir = require 'require-dir'
 assert = require 'assert'
 
 merge = require '../utils/merge'
@@ -9,8 +8,7 @@ merge = require '../utils/merge'
 
 conf = { elasticsearch: process.env.ELASTICSEARCH_URL }
 
-singleton = do ->
-  c = null
+singleton = do (c=null) ->
   ->
     return c if c
     c = new elasticsearch.Client(
@@ -60,24 +58,20 @@ waitES = -> Q.genrun ->
   while not done
     try
       yield Q.delay 1000
-      console.log 'Waiting for ElasticSearch to be available..'
       yield loglessClient.ping()
       console.log conf.elasticsearch
       done = true
     catch e
-      console.log 'Retrying..'
+      console.log 'Waiting for ElasticSearch to be available..'
 
 
 # initialize index templates
-indexTemplatesInit = (filter=false, silent=false) -> Q.genrun ->
+indexTemplatesInit = (silent=false) -> Q.genrun ->
   client = singleton()
 
-  templates = requireDir './templates'
+  templates = require './templates'
 
   for templateName, template of templates
-
-    if filter
-      if not (templateName in filter) then continue
 
     console.log "estemplates: updating template '#{templateName}'" if not silent
     yield client.indices.putTemplate
@@ -90,7 +84,7 @@ indexTemplatesInit = (filter=false, silent=false) -> Q.genrun ->
       console.log "estemplates: creating default index '#{index}'" if not silent
       yield client.indices.create({index})
 
-    # When mappings change it's possible that new mappings are compatible with the old
+    # When template mappings change it's possible that new mappings are compatible with the old
     # ones. So we could try to apply them to the "current" indexes.
     # The _current_ indexes are the one referred to by the alias.
     # We could probably try to issue 'putMappings' on the alias itself hoping that they

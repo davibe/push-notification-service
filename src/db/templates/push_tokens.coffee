@@ -1,5 +1,3 @@
-requireDir = require 'require-dir'
-
 module.exports =
   order: 0 # template priority order
   template: 'push_tokens*'
