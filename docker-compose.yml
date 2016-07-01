@@ -20,3 +20,16 @@ test:
     - NODE_ENV=development
     - TEST_MODE=true
   command: npm run test
+
+# example
+service:
+  build: .
+  links: ["rabbitmq", "elasticsearch"]
+  environment:
+    - ELASTICSEARCH_URL=http://elasticsearch:9200
+    - RABBITMQ_URL=amqp://rabbitmq:5672//?heartbeat=10
+    - GOOGLE_API_KEY="${GOOGLE_API_KEY}"
+    - CERTS_PATH=./push-notification-service-data
+    - NODE_ENV=development
+    - DEBUG=node-gcm
+  command: coffee src/service.coffee
