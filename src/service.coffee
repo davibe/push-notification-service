@@ -10,6 +10,7 @@ conf =
   connection:
     url: process.env.RABBITMQ_URL or "amqp://localhost:5672//?heartbeat=10"
   logLevel: 'warn'
+  rpc: timeout: 5000
 
 amqpc = amqp(conf)
 
