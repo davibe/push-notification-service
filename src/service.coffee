@@ -34,14 +34,14 @@ send = (msg, headers, del) -> genrun ->
       "Notification type unknown (#{msg.type} is not [apn|gcm])"
     )
     service = serviceForType(msg.type)
-    yield service.send(msg.notification, msg.tokens)
+    result = yield service.send(msg.notification, msg.tokens)
+    return result
 
   catch error # log and re-throw the error back to the amqp producer
     console.log 'PushNotification service error', error
     console.log error.stack.split('\n') if error.stack
     throw error
 
-  { result: 'ok' }
 
 
 module.exports.start = start = -> genrun ->
