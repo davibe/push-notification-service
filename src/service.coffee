@@ -43,6 +43,8 @@ send = (msg) -> genrun ->
     throw error
 
 
+apn.setInvalidTokenCallback(db.deleteById)
+gcm.setInvalidTokenCallback(db.deleteById)
 
 module.exports.start = start = -> genrun ->
 

@@ -9,6 +9,8 @@ delete process.env.GOOGLE_API_KEY # nobody needs to know
 sender = new gcm.Sender(GOOGLE_API_KEY);
 sender.send = Q.denodeify(sender.send.bind(sender))
 
+invalidateToken = ->
+
 
 # exported api
 
@@ -31,11 +33,14 @@ module.exports.send = send = (notification={}, tokens=[]) -> genrun ->
         if result.error is 'InvalidRegistration'
           deviceTokensToDelete.push(tokens[index])
     console.log "GCM Service Invalid tokens", deviceTokensToDelete if deviceTokensToDelete.length > 0
+    invalidateToken(token) for token in deviceTokensToDelete
 
     return response
   catch error
     console.log "GCM Service Error", error
     throw error
+
+module.exports.setInvalidTokenCallback = (cb) -> invalidateToken = cb
 
 
 if not module.parent then genrun ->

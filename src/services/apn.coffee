@@ -16,6 +16,8 @@ options =
   batchFeedback: true
   interval: 10
 
+invalidateToken = ->
+
 # Handle feedback, tells us when devicetokens are invalid
 
 feedback = new apn.Feedback(options)
@@ -23,6 +25,7 @@ feedback = new apn.Feedback(options)
 feedback.on 'feedback', (devices) ->
   deviceTokensToDelete = (item.device for item in devices)
   console.log "APN Service Invalid tokens", deviceTokensToDelete if deviceTokensToDelete.length > 0
+  invalidateToken(token) for token in deviceTokensToDelete
 
 # Create the main service
 
@@ -76,6 +79,7 @@ module.exports.send = send = (notification={}, tokens=[]) ->
   service.pushNotification(note, tokens)
   { ok: true }
 
+module.exports.setInvalidTokenCallback = (cb) -> invalidateToken = cb
 
 # TODO: setup feedback service
 # Do we actually need feedback service if we already have 'transmissionError' event ?
