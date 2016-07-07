@@ -14,6 +14,7 @@ options =
   pfx: path.join(CERTS_PATH,'apn', ENV,  'key.p12')
   production: ENV is 'production'
   batchFeedback: true
+  interval: 10
 
 # Handle feedback, tells us when devicetokens are invalid
 
@@ -46,9 +47,8 @@ service.on 'transmitted', (notification, device) ->
   token = device.token.toString('hex')
   console.log "APN Service Notification transmitted to: #{token}"
 
-service.on 'transmissionError', (errCode, notification, device) ->
-  token = device.token.toString('hex')
-  console.log "APN Service Notification to #{token} failed with #{errCode}", device, notification
+service.on 'transmissionError', (errCode, notification, token) ->
+  console.log "APN Service Notification to #{token} failed with #{errCode}", token, notification
 
 service.on 'cacheTooSmall', (sizeDifference) ->
   console.log "APN Service Error: CacheTooSmall (size difference: #{sizeDifference})"
@@ -74,6 +74,7 @@ module.exports.send = send = (notification={}, tokens=[]) ->
     return console.log "Would send APN push notification", note, tokens
 
   service.pushNotification(note, tokens)
+  { ok: true }
 
 
 # TODO: setup feedback service

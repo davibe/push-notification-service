@@ -18,7 +18,7 @@ amqpc = amqp(conf)
 serviceForType = (type) -> if type is 'gcm' then gcm else apn
 
 
-send = (msg, headers, del) -> genrun ->
+send = (msg) -> genrun ->
   try
     # a bit of validation
     assert(
@@ -49,7 +49,8 @@ module.exports.start = start = -> genrun ->
   options = { ack: true, prefetchCount: 1 }
 
   # expose function to send push notifications
-  yield amqpc.serve 'myexchange', 'push-notification-service.send', options, send
+  yield amqpc.serve 'myexchange', 'push-notification-service.send', options, (msg, headers, del) ->
+    send(msg...)
 
   # expose functions to manage push tokens (db)
   for name, fn of db when typeof(fn) is 'function' then do (name=name, fn=fn) ->
