@@ -16,10 +16,10 @@ module.exports.send = send = (notification={}, tokens=[]) -> genrun ->
   try
     data =
       message: notification.alert or notification.message
-    message = new gcm.Message({data})
+    # tell GCM servers we don't actually want to send the message
+    data.dryRun = true if process.env.TEST_MODE in ["1", "true"]
 
-    if process.env.TEST_MODE in ["1", "true"]
-      return console.log "Would send GCM push notification", message, tokens
+    message = new gcm.Message({data})
 
     response = yield sender.send(message, {registrationTokens: tokens})
     console.log "GCM Service Notification Sent", response
