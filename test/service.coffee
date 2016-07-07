@@ -1,5 +1,6 @@
 assert = require 'assert'
-Q = require 'q-extended'
+Q = require 'q'
+genrun = require 'q-genrun'
 amqp = require 'amqp-as-promised'
 
 service = require '../src/service'
@@ -17,7 +18,7 @@ pushService = (method, args...) ->
 describe 'amqp db interface should work as well', ->
   # prepare amqp client
 
-  before -> Q.genrun ->
+  before -> genrun ->
     yield service.start()
 
   # launch db tests using but passing it a remote rpc interface
@@ -43,12 +44,12 @@ tokens = [sample.token.value]
 
 describe '.. and be able to send messages !', ->
 
-  afterEach -> Q.genrun ->
+  afterEach -> genrun ->
     try
       yield pushService('deleteById', sample.token.value)
     catch e
 
-  it "saves one push token with no errors", -> Q.genrun ->
+  it "saves one push token with no errors", -> genrun ->
     yield pushService('createOrUpdate', sample)
 
     notificationApn =

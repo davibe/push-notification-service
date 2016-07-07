@@ -1,4 +1,5 @@
-Q = require 'q-extended'
+Q = require 'q'
+genrun = require 'q-genrun'
 assert = require 'assert'
 
 esclient = require './esclient'
@@ -19,7 +20,7 @@ validate = (body) ->
   return true
 
 
-module.exports.createOrUpdate = createOrUpdate = (body, exclusive=false) -> Q.genrun ->
+module.exports.createOrUpdate = createOrUpdate = (body, exclusive=false) -> genrun ->
   yield deleteByUserId(body.userId) if exclusive
   validate(body)
   body = Object.assign({}, body, tsUpdated: Date.now())
@@ -27,14 +28,14 @@ module.exports.createOrUpdate = createOrUpdate = (body, exclusive=false) -> Q.ge
   yield client.index({body, id, refresh: true})
 
 
-module.exports.deleteById = deleteById = (id) -> Q.genrun ->
+module.exports.deleteById = deleteById = (id) -> genrun ->
   try
     yield client.delete({ id, refresh: true })
   catch e
     throw e if e.status isnt 404
 
 
-module.exports.getById = getById = (value) -> Q.genrun ->
+module.exports.getById = getById = (value) -> genrun ->
   try
     return (yield client.get(id: value))._source
   catch e
@@ -42,7 +43,7 @@ module.exports.getById = getById = (value) -> Q.genrun ->
     throw e
 
 
-module.exports.findByUserId = findByUserId = (userId) -> Q.genrun ->
+module.exports.findByUserId = findByUserId = (userId) -> genrun ->
   body =
     size: 10000
     filter:
@@ -57,7 +58,7 @@ module.exports.findByUserId = findByUserId = (userId) -> Q.genrun ->
 module.exports.findByUserIds = findByUserId
 
 
-module.exports.deleteByUserId = deleteByUserId = (userId) -> Q.genrun ->
+module.exports.deleteByUserId = deleteByUserId = (userId) -> genrun ->
   pushTokens = yield findByUserId(userId)
   try
     yield deleteById(t.token.value) for t in pushTokens

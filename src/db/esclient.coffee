@@ -1,6 +1,7 @@
 elasticsearch = require 'elasticsearch'
 URL = require 'url'
-Q = require 'q-extended'
+Q = require 'q'
+genrun = require 'q-genrun'
 assert = require 'assert'
 
 merge = require '../utils/merge'
@@ -51,7 +52,7 @@ getClient = (defaultParams) ->
 
 
 # Returns a promise. Resolves when elasticsearch is available
-waitES = -> Q.genrun ->
+waitES = -> genrun ->
   # create client that does not log errors
   loglessClient = new elasticsearch.Client(host: conf.elasticsearch, log: [])
   done = false
@@ -66,7 +67,7 @@ waitES = -> Q.genrun ->
 
 
 # initialize index templates
-indexTemplatesInit = (silent=false) -> Q.genrun ->
+indexTemplatesInit = (silent=false) -> genrun ->
   client = singleton()
 
   templates = require './templates'
