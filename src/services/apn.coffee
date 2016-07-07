@@ -13,9 +13,19 @@ ENV = 'production' if process.env.NODE_ENV is 'production'
 options =
   pfx: path.join(CERTS_PATH,'apn', ENV,  'key.p12')
   production: ENV is 'production'
+  batchFeedback: true
+
+# Handle feedback, tells us when devicetokens are invalid
+
+feedback = new apn.Feedback(options)
+
+feedback.on 'feedback', (devices) ->
+  deviceTokensToDelete = (item.device for item in devices)
+  console.log "APN Service Invalid tokens", deviceTokensToDelete if deviceTokensToDelete.length > 0
+
+# Create the main service
 
 service = new apn.Connection(options)
-
 
 # log all events
 
