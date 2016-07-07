@@ -60,6 +60,8 @@ service.on 'cacheTooSmall', (sizeDifference) ->
 # exported api
 
 module.exports.send = send = (notification={}, tokens=[]) ->
+  ret = { ok: true } # we have no specific payload to return
+
   note = new apn.Notification()
   # expiry
   oneHour = Math.floor(Date.now() / 1000) + 3600
@@ -74,10 +76,11 @@ module.exports.send = send = (notification={}, tokens=[]) ->
   note.payload = notification.payload || {}
 
   if process.env.TEST_MODE in ["1", "true"]
-    return console.log "Would send APN push notification", note, tokens
+    console.log "Would send APN push notification", note, tokens
+    return ret
 
   service.pushNotification(note, tokens)
-  { ok: true }
+  ret
 
 module.exports.setInvalidTokenCallback = (cb) -> invalidateToken = cb
 
