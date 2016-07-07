@@ -19,7 +19,8 @@ validate = (body) ->
   return true
 
 
-module.exports.createOrUpdate = createOrUpdate = (body) -> Q.genrun ->
+module.exports.createOrUpdate = createOrUpdate = (body, exclusive=false) -> Q.genrun ->
+  yield deleteByUserId(body.userId) if exclusive
   validate(body)
   body = Object.assign({}, body, tsUpdated: Date.now())
   id = body.token.value
@@ -27,7 +28,10 @@ module.exports.createOrUpdate = createOrUpdate = (body) -> Q.genrun ->
 
 
 module.exports.deleteById = deleteById = (id) -> Q.genrun ->
-  yield client.delete({ id, refresh: true })
+  try
+    yield client.delete({ id, refresh: true })
+  catch e
+    throw e if e.status isnt 404
 
 
 module.exports.getById = getById = (value) -> Q.genrun ->
@@ -55,4 +59,7 @@ module.exports.findByUserIds = findByUserId
 
 module.exports.deleteByUserId = deleteByUserId = (userId) -> Q.genrun ->
   pushTokens = yield findByUserId(userId)
-  yield deleteById(t.token.value) for t in pushTokens
+  try
+    yield deleteById(t.token.value) for t in pushTokens
+  catch e
+    throw e if e.status isnt 404
