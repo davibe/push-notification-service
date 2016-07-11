@@ -4,7 +4,9 @@ assert = require 'assert'
 
 gcm = require './services/gcm'
 apn = require './services/apn'
+esclient = require './db/esclient'
 db = require './db'
+
 
 conf =
   connection:
@@ -59,6 +61,9 @@ module.exports.start = start = -> genrun ->
     # console.log "Binding db.#{name} to AMQP queue push-notification-service.#{name}"
     amqpc.serve 'myexchange', "push-notification-service.#{name}", options, (msg, headers, del) ->
       fn(msg...) # msg is an array of arguments for the fn
+
+  yield esclient.waitES()
+  yield esclient.indexTemplatesInit()
 
   # possibly handle graceful shutdown of the service
   gracefulShutdown = (opts) ->
