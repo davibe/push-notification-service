@@ -11,7 +11,7 @@ ENV = 'production' if process.env.NODE_ENV is 'production'
 # https://github.com/argon/node-apn/wiki/Preparing-Certificates
 
 options =
-  pfx: path.join(CERTS_PATH,'apn', ENV,  'key.p12')
+  pfx: path.join(CERTS_PATH, 'apn', ENV,  'key.p12')
   production: ENV is 'production'
   batchFeedback: true
   interval: 10
