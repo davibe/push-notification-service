@@ -15,9 +15,9 @@ cert = path.join(CERTS_PATH, 'apn', ENV,  'cert.pem')
 key = path.join(CERTS_PATH, 'apn', ENV,  'key.pem')
 
 options =
-  #pfx: path.join(CERTS_PATH, 'apn', ENV,  'key.p12')
-  cert: cert
-  key: key
+  pfx: path.join(CERTS_PATH, 'apn', ENV,  'key.p12')
+  #cert: cert
+  #key: key
   production: ENV is 'production'
   batchFeedback: true
   interval: 10
