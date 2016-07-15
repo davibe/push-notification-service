@@ -26,7 +26,7 @@ if not module.parent then genrun ->
 
     console.log 'Sending notification', note
 
-    response = yield amqpc.rpc('myexchange', 'push-notification-service.send', note)
+    response = yield amqpc.rpc('myexchange', 'push-notification-service.send', [note])
     console.log response
 
   catch error
