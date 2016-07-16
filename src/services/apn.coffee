@@ -7,15 +7,13 @@ delete process.env.CERTS_PATH # nobody else needs to know
 ENV = 'development'
 ENV = 'production' if process.env.NODE_ENV is 'production'
 
-# APN P12 certificate are created like this
+# APN certificates are created like this
 # https://github.com/argon/node-apn/wiki/Preparing-Certificates
 
-pfx = path.join(CERTS_PATH, 'apn', ENV,  'key.p12')
 cert = path.join(CERTS_PATH, 'apn', ENV,  'cert.pem')
 key = path.join(CERTS_PATH, 'apn', ENV,  'key.pem')
 
 options =
-  # pfx: path.join(CERTS_PATH, 'apn', ENV,  'key.p12')
   cert: cert
   key: key
   production: ENV is 'production'
