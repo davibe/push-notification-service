@@ -9,5 +9,5 @@ RUN npm install -g coffee-script
 
 ADD ./package.json /push-notification-service/
 WORKDIR /push-notification-service
-RUN npm install .
+RUN npm install . && mv node_modules ../
 ADD . /push-notification-service
