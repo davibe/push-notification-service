@@ -43,3 +43,14 @@ Look at `src/client_example.coffee` and `test/service.coffee` to better understa
 
 Calls will be queued by rabbitmq and executed by any of the available service instances.
 You can launch many instances of this micro-service to increase capacity.
+
+
+Cli usage
+---------
+
+As a test client there is also a `cli` (command line interface).
+
+You can user the cli like this (example without docker in this case)
+
+    export RABBITMQ_URL="amqp://localhost:5672//?heartbeat=10" \
+    node src/cli --help
