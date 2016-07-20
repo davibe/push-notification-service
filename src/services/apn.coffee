@@ -27,8 +27,9 @@ invalidateToken = ->
 feedback = new apn.Feedback(options)
 
 feedback.on 'feedback', (devices) ->
-  deviceTokensToDelete = (item.device for item in devices)
-  console.log "APN Service Invalid tokens", deviceTokensToDelete if deviceTokensToDelete.length > 0
+  console.log 'feedback', devices
+  deviceTokensToDelete = (item.device.token.toString() for item in devices)
+  console.log "APN Service Feedback Invalid tokens", deviceTokensToDelete if deviceTokensToDelete.length > 0
   invalidateToken(token) for token in deviceTokensToDelete
 
 # Create the main service
@@ -70,10 +71,11 @@ module.exports.send = send = (notification={}, tokens=[]) ->
   # expiry
   oneHour = Math.floor(Date.now() / 1000) + 3600
   fiveHours = oneHour * 5
-  note.expry = fiveHours
+  aMinute = Math.floor(Date.now() / 1000) + 60
+  note.expry = aMinute
   # badge increment
   # TODO: figure out how to do autoincrementinb badge
-  note.badge = notification.badge or 1
+  note.badge = notification.badge or ""
   # the message to be shown to the user
   note.alert = notification.alert or notification.message or ""
   # additional application-specific payload

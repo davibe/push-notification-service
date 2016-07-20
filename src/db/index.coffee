@@ -30,9 +30,11 @@ module.exports.createOrUpdate = createOrUpdate = (body, exclusive=false) -> genr
 
 module.exports.deleteById = deleteById = (id) -> genrun ->
   try
-    yield client.delete({ id, refresh: true })
+     yield client.delete({ id, refresh: true })
   catch e
     throw e if e.status isnt 404
+    return { result: 'not found'}
+  { result: 'ok' }
 
 
 module.exports.getById = getById = (value) -> genrun ->
@@ -41,6 +43,18 @@ module.exports.getById = getById = (value) -> genrun ->
   catch e
     return null if e.status is 404
     throw e
+
+
+module.exports.findByUsername = findByUsername = (userId) -> genrun ->
+  body =
+    size: 10000
+    filter:
+      terms:
+        "user.username": [].concat(userId)
+  esquery = yield client.search({body})
+  return [] if esquery.hits.total is 0
+  values = (hit._source for hit in esquery.hits.hits)
+  values
 
 
 module.exports.findByUserId = findByUserId = (userId) -> genrun ->

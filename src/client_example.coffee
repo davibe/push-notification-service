@@ -22,6 +22,7 @@ if not module.parent then genrun ->
       tokens: if token then [token] else []
       type: type
       notification:
+        badge: -1
         alert: message
 
     console.log 'Sending notification', note
@@ -32,4 +33,6 @@ if not module.parent then genrun ->
   catch error
     console.log error
 
+  console.log 'shutdown'
   yield amqpc.shutdown()
+  process.exit()
