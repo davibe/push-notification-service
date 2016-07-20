@@ -53,4 +53,4 @@ As a test client there is also a `cli` (command line interface).
 You can user the cli like this (example without docker in this case)
 
     export RABBITMQ_URL="amqp://localhost:5672//?heartbeat=10" \
-    node src/cli --help
+    coffee src/cli --help
