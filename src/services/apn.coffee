@@ -65,7 +65,7 @@ service.on 'cacheTooSmall', (sizeDifference) ->
 # exported api
 
 module.exports.send = send = (notification={}, tokens=[]) ->
-  ret = { ok: true } # we have no specific payload to return
+  ret = { result: 'ok' } # we have no specific payload to return
 
   note = new apn.Notification()
   # expiry
