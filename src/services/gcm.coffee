@@ -30,7 +30,7 @@ module.exports.send = send = (notification={}, tokens=[]) -> genrun ->
     deviceTokensToDelete = []
     if response.results
       for result, index in response.results
-        if result.error is 'InvalidRegistration'
+        if result.error in ['InvalidRegistration', 'NotRegistered']
           deviceTokensToDelete.push(tokens[index])
     console.log "GCM Service Invalid tokens", deviceTokensToDelete if deviceTokensToDelete.length > 0
     invalidateToken(token) for token in deviceTokensToDelete

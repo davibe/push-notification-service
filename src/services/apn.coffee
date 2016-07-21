@@ -28,7 +28,7 @@ feedback = new apn.Feedback(options)
 
 feedback.on 'feedback', (devices) ->
   console.log 'feedback', devices
-  deviceTokensToDelete = (item.device.token.toString() for item in devices)
+  deviceTokensToDelete = (item.device.token.toString("hex") for item in devices)
   console.log "APN Service Feedback Invalid tokens", deviceTokensToDelete if deviceTokensToDelete.length > 0
   invalidateToken(token) for token in deviceTokensToDelete
 
