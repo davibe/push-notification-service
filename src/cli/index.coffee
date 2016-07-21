@@ -1,4 +1,3 @@
-genrun = require 'q-genrun'
 yargs = require 'yargs'
 
 if not module.parent
@@ -9,7 +8,6 @@ if not module.parent
     .command(require('./cmds/list'))
     .command(require('./cmds/del'))
     .command(require('./cmds/send'))
-
     .command(require('./cmds/list-with-username'))
     .command(require('./cmds/send-with-username'))
 
