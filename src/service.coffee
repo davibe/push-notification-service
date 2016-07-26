@@ -21,6 +21,16 @@ serviceForType = (type) -> if type is 'gcm' then gcm else apn
 
 
 send = (msg) -> genrun ->
+
+  # As a reference
+  exampleMessage =
+    tokens: ["1", "2"]
+    type: "apn" # or "gcm"
+    notification:
+      badge: 0
+      message: "Some message"
+      payload: { some: "data" } # <- not mandatory
+
   try
     # a bit of validation
     assert(

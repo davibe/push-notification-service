@@ -18,6 +18,7 @@ module.exports.send = send = (notification={}, tokens=[]) -> genrun ->
   try
     data =
       message: notification.alert or notification.message
+      payload: notification.payload or {}
     # tell GCM servers we don't actually want to send the message
     data.dryRun = true if process.env.TEST_MODE in ["1", "true"]
 
