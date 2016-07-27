@@ -79,6 +79,10 @@ module.exports.send = send = (notification={}, tokens=[]) ->
   note.alert = notification.alert or notification.message or ""
   # additional application-specific payload
   note.payload = notification.payload || {}
+  # tell the ios application this notification may be parsed in the background
+  # See. 'Using Push Notifications to Initiate a Download' at
+  # https://developer.apple.com/library/ios/documentation/iPhone/Conceptual/iPhoneOSProgrammingGuide/BackgroundExecution/BackgroundExecution.html#//apple_ref/doc/uid/TP40007072-CH4-SW1
+  note.contentAvailable = 1
 
   if process.env.TEST_MODE in ["1", "true"]
     console.log "Would send APN push notification", note, tokens
