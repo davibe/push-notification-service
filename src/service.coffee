@@ -63,7 +63,7 @@ module.exports.start = start = -> genrun ->
   options = { ack: true, prefetchCount: 1 }
 
   serve = (name, fn) -> genrun ->
-    yield amqpc.serve 'myexchange', 'push-notification-service.send', options, (msg, headers, del) -> genrun ->
+    yield amqpc.serve 'myexchange', "push-notification-service.#{name}", options, (msg, headers, del) -> genrun ->
       try
         yield fn(msg...) # msg is an array of arguments for the fn
       catch e
