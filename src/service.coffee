@@ -62,15 +62,21 @@ module.exports.start = start = -> genrun ->
 
   options = { ack: true, prefetchCount: 1 }
 
+  serve = (name, fn) -> genrun ->
+    yield amqpc.serve 'myexchange', 'push-notification-service.send', options, (msg, headers, del) -> genrun ->
+      try
+        yield fn(msg...) # msg is an array of arguments for the fn
+      catch e
+        console.log(e, e.stack?.split('\n')) # log the error locally
+        throw e # ...and let amqpc propagate the error to the caller
+
   # expose function to send push notifications
-  yield amqpc.serve 'myexchange', 'push-notification-service.send', options, (msg, headers, del) ->
-    send(msg...)
+  yield serve('send', send)
 
   # expose functions to manage push tokens (db)
   for name, fn of db when typeof(fn) is 'function' then do (name=name, fn=fn) ->
     # console.log "Binding db.#{name} to AMQP queue push-notification-service.#{name}"
-    amqpc.serve 'myexchange', "push-notification-service.#{name}", options, (msg, headers, del) ->
-      fn(msg...) # msg is an array of arguments for the fn
+    yield serve(name, fn)
 
   yield esclient.waitES()
   yield esclient.indexTemplatesInit()
