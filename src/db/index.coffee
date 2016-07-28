@@ -21,8 +21,8 @@ validate = (body) ->
 
 
 module.exports.createOrUpdate = createOrUpdate = (body, exclusive=false) -> genrun ->
-  yield deleteByUserId(body.userId) if exclusive
   validate(body)
+  yield deleteByUserId(body.user.id) if exclusive
   body = Object.assign({}, body, tsUpdated: Date.now())
   id = body.token.value
   yield client.index({body, id, refresh: true})
