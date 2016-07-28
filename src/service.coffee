@@ -74,7 +74,7 @@ module.exports.start = start = -> genrun ->
   yield serve('send', send)
 
   # expose functions to manage push tokens (db)
-  for name, fn of db when typeof(fn) is 'function' then do (name=name, fn=fn) ->
+  for name, fn of db when typeof(fn) is 'function'
     # console.log "Binding db.#{name} to AMQP queue push-notification-service.#{name}"
     yield serve(name, fn)
 
