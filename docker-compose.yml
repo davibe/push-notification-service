@@ -1,5 +1,5 @@
 elasticsearch:
-  image: elasticsearch
+  image: elasticsearch:2.1
 
 rabbitmq:
   image: rabbitmq:3-management
