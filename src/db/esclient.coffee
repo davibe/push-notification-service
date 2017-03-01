@@ -1,6 +1,7 @@
 elasticsearch = require 'elasticsearch'
 URL = require 'url'
 Q = require 'q'
+Q.longStackSupport = true
 genrun = require 'q-genrun'
 assert = require 'assert'
 
@@ -17,7 +18,20 @@ singleton = do (c=null) ->
       log: 'info'
       # sniffOnConnectionFault: true
       # sniffInterval: 60 * 1000 # ms
-      defer: -> Q.defer()
+      defer: ->
+        deferred = Q.defer()
+        deferred.promise = deferred.promise.catch (e) ->
+          console.log e
+          if e.response
+            console.log(
+              JSON.stringify(
+                JSON.parse(e.response)
+                null
+                true
+              )
+            )
+          throw e
+        deferred
     )
     # Cliet init options ref:
     # https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/configuration.html
@@ -25,30 +39,7 @@ singleton = do (c=null) ->
 console.log "Elastisearch Client will use #{conf.elasticsearch}"
 
 
-# Returns a configured elasticsearch client.
-# configured = it has default parameters you don't have to specify each time
-getClient = (defaultParams) ->
-  client = singleton()
-
-  # Enriches first parameter (object)
-  # to have `defaultParams` default attributes
-  P = (params) -> merge({}, defaultParams, params)
-
-  # Returns a function calling original `o[fn]` with
-  # first param enriched by `P()`
-  Pfn = (o, fn) -> (params, args...) -> o[fn](P(params), args...)
-
-  configuredClient =
-    ping: (args) -> client.ping(args) # does not need wrapping
-    indices: {}
-
-  for method in "create index get delete search count exists mget bulk scroll update".split(' ')
-    configuredClient[method] = Pfn(client, method)
-
-  for method in "exists delete create getMapping refresh putTemplate getTemplate analyze putMapping deleteAlias putAlias".split(' ')
-    configuredClient.indices[method] = Pfn(client.indices, method)
-
-  configuredClient
+getClient = (defaultParams) -> singleton()
 
 
 # Returns a promise. Resolves when elasticsearch is available

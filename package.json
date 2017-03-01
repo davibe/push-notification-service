@@ -11,7 +11,7 @@
   "dependencies": {
     "amqp-as-promised": "^1.2.3",
     "apn": "^1.7.5",
-    "elasticsearch": "^11.0.1",
+    "elasticsearch": "^12.1.3",
     "mocha": "^2.5.3",
     "node-gcm": "^0.14.2",
     "q-genrun": "^1.0.1",

@@ -1,6 +1,7 @@
 assert = require 'assert'
 Q = require 'q'
 genrun = require 'q-genrun'
+Q.longStackSupport = true
 
 esclient = require '../src/db/esclient'
 db = require '../src/db'

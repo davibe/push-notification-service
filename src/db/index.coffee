@@ -5,10 +5,10 @@ assert = require 'assert'
 esclient = require './esclient'
 merge = require '../utils/merge'
 
-module.exports._index = _index = "push_tokens"
-module.exports._type = _type = "push_token"
+module.exports.index = index = "push_tokens"
+module.exports.type = type = "push_token"
 
-client = esclient.getClient({index: _index, type: _type})
+client = esclient.getClient()
 types = ['apn', 'gcm']
 
 
@@ -25,12 +25,12 @@ module.exports.createOrUpdate = createOrUpdate = (body, exclusive=false) -> genr
   yield deleteByUserId(body.user.id) if exclusive
   body = Object.assign({}, body, tsUpdated: Date.now())
   id = body.token.value
-  yield client.index({body, id, refresh: true})
+  yield client.index({index, type, body, id, refresh: true})
 
 
 module.exports.deleteById = deleteById = (id) -> genrun ->
   try
-     yield client.delete({ id, refresh: true })
+    yield client.delete({index, type, id, refresh: true })
   catch e
     throw e if e.status isnt 404
     return { result: 'not found'}
@@ -39,7 +39,7 @@ module.exports.deleteById = deleteById = (id) -> genrun ->
 
 module.exports.getById = getById = (value) -> genrun ->
   try
-    return (yield client.get(id: value))._source
+    return (yield client.get({index, type, id: value}))._source
   catch e
     return null if e.status is 404
     throw e
@@ -48,10 +48,10 @@ module.exports.getById = getById = (value) -> genrun ->
 module.exports.findByUsername = findByUsername = (userId) -> genrun ->
   body =
     size: 10000
-    filter:
+    query: bool: filter:
       terms:
         "user.username": [].concat(userId)
-  esquery = yield client.search({body})
+  esquery = yield client.search({index, type, body})
   return [] if esquery.hits.total is 0
   values = (hit._source for hit in esquery.hits.hits)
   values
@@ -60,10 +60,10 @@ module.exports.findByUsername = findByUsername = (userId) -> genrun ->
 module.exports.findByUserId = findByUserId = (userId) -> genrun ->
   body =
     size: 10000
-    filter:
+    query: bool: filter:
       terms:
         "user.id": [].concat(userId)
-  esquery = yield client.search({body})
+  esquery = yield client.search({index, type, body})
   return [] if esquery.hits.total is 0
   values = (hit._source for hit in esquery.hits.hits)
   values

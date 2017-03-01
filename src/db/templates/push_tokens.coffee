@@ -11,20 +11,20 @@ module.exports =
           type: 'object'
           properties:
             id:
-              type: 'string'
-              index: 'not_analyzed'
+              type: 'keyword'
+              index: true
             username:
-              type: 'string'
-              index: 'not_analyzed'
+              type: 'keyword'
+              index: true
         token:
           type: 'object'
           properties:
             type:
-              type: 'string'
-              index: 'not_analyzed'
+              type: 'keyword'
+              index: true
             value:
-              type: 'string'
-              index: 'not_analyzed'
+              type: 'keyword'
+              index: true
         tsCreated: type: 'date', format: 'strict_date_optional_time||epoch_millis'
         tsUpdated: type: 'date', format: 'strict_date_optional_time||epoch_millis'
 
