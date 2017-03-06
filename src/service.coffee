@@ -7,6 +7,7 @@ apn = require './services/apn'
 esclient = require './db/esclient'
 db = require './db'
 
+if global.gc then setInterval((-> globa.gc()), 5000)
 
 conf =
   connection:
